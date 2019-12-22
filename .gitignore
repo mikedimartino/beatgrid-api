@@ -1,6 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 .vs
+*.user
+
+appsettings.Development.json
 
 bin
 obj
