@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Rest", "LambdaBeatGridApi\BeatGrid.Rest.csproj", "{DBBB9857-F5B6-44A6-9DB6-7D8D3A01B6AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatGrid.Data", "BeatGrid.Data\BeatGrid.Data.csproj", "{C22D42B4-640B-497B-99B6-5EB43A5FE6A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Data", "BeatGrid.Data\BeatGrid.Data.csproj", "{C22D42B4-640B-497B-99B6-5EB43A5FE6A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatGrid.Application", "BeatGrid.Application\BeatGrid.Application.csproj", "{A47E70F2-B48A-4D6F-B34F-A4F2C6578D6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Application", "BeatGrid.Application\BeatGrid.Application.csproj", "{A47E70F2-B48A-4D6F-B34F-A4F2C6578D6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatGrid.Contracts", "BeatGrid.Contracts\BeatGrid.Contracts.csproj", "{50D8C48A-EE86-477D-8FE3-A91C7F183F30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Contracts", "BeatGrid.Contracts\BeatGrid.Contracts.csproj", "{50D8C48A-EE86-477D-8FE3-A91C7F183F30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatGrid.ConsoleApp", "BeatGrid.ConsoleApp\BeatGrid.ConsoleApp.csproj", "{994DE0D6-B784-4EF5-894F-2E4D48B37188}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{50D8C48A-EE86-477D-8FE3-A91C7F183F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D8C48A-EE86-477D-8FE3-A91C7F183F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D8C48A-EE86-477D-8FE3-A91C7F183F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994DE0D6-B784-4EF5-894F-2E4D48B37188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{994DE0D6-B784-4EF5-894F-2E4D48B37188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{994DE0D6-B784-4EF5-894F-2E4D48B37188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{994DE0D6-B784-4EF5-894F-2E4D48B37188}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
