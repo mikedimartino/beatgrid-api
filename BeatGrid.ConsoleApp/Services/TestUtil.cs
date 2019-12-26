@@ -1,9 +1,8 @@
-﻿using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+﻿using Amazon.DynamoDBv2.DataModel;
+using BeatGrid.Contracts.Common;
 using BeatGrid.Data.Entities;
 using BeatGrid.Data.Repositories;
 using System;
-using System.Collections.Generic;
 
 namespace BeatGrid.ConsoleApp.Services
 {
@@ -17,13 +16,8 @@ namespace BeatGrid.ConsoleApp.Services
         private readonly IDynamoDBContext _context;
         private readonly IBeatRepository _beatRepository;
 
-        public TestUtil(IAmazonDynamoDB dynamoDb, IBeatRepository beatRepository, IDynamoDBContext context)
+        public TestUtil(IBeatRepository beatRepository, IDynamoDBContext context)
         {
-            //var dynamoConfig = new DynamoDBContextConfig
-            //{
-            //    TableNamePrefix = "dev_"
-            //};
-            //_context = new DynamoDBContext(dynamoDb);
             _context = context;
             _beatRepository = beatRepository;
         }

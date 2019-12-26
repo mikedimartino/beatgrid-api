@@ -1,14 +1,10 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using BeatGrid.Contracts.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace BeatGrid.Data.Entities
+namespace BeatGrid.Contracts.Common
 {
-
-    [DynamoDBTable("Beat")]
-    public class BeatEntity
+    public class Beat
     {
-        [DynamoDBHashKey]
         public string Id { get; set; }
         public string Name { get; set; }
         public int Tempo { get; set; }
@@ -16,5 +12,7 @@ namespace BeatGrid.Data.Entities
         public int DivisionLevel { get; set; }
         public List<Row> Rows { get; set; }
         public List<Measure> Measures { get; set; }
+
+        public IEnumerable<string> GetSoundIds() => Rows.Select(r => r.SoundId);
     }
 }

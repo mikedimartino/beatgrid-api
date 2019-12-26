@@ -1,4 +1,7 @@
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using AutoMapper;
+using BeatGrid.Application.Map;
 using BeatGrid.Application.Services;
 using BeatGrid.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -31,13 +34,26 @@ namespace BeatGrid.Rest
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BeatGrid API", Version = "v1" });
             });
 
+            services.AddAutoMapper(typeof(AutoMapperProfile));
+
             // AWS
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonDynamoDB>();
+            services.AddSingleton<IDynamoDBContext>(x =>
+            {
+                var ddb = x.GetRequiredService<IAmazonDynamoDB>();
+                var config = new DynamoDBContextConfig
+                {
+                    TableNamePrefix = "dev_"
+                };
+                return new DynamoDBContext(ddb, config);
+            });
 
             // Custom
             services.AddSingleton<IBeatService, BeatService>();
             services.AddSingleton<IBeatRepository, BeatRepository>();
+            services.AddSingleton<ISoundService, SoundService>();
+            services.AddSingleton<ISoundRepository, SoundRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

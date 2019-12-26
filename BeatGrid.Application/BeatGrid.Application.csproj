@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeatGrid.Contracts\BeatGrid.Contracts.csproj" />
     <ProjectReference Include="..\BeatGrid.Data\BeatGrid.Data.csproj" />
   </ItemGroup>
 

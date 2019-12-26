@@ -2,8 +2,12 @@
 
 namespace BeatGrid.Data.Entities
 {
-    [DynamoDBTable("SoundTest")]
+    [DynamoDBTable("Sound")]
     public class SoundEntity
     {
+        [DynamoDBHashKey]
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string FilePath { get; set; }
     }
 }
