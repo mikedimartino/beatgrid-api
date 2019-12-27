@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Rest", "LambdaBeatGridApi\BeatGrid.Rest.csproj", "{DBBB9857-F5B6-44A6-9DB6-7D8D3A01B6AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Rest", "BeatGrid.Rest\BeatGrid.Rest.csproj", "{DBBB9857-F5B6-44A6-9DB6-7D8D3A01B6AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatGrid.Data", "BeatGrid.Data\BeatGrid.Data.csproj", "{C22D42B4-640B-497B-99B6-5EB43A5FE6A2}"
 EndProject

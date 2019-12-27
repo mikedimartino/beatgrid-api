@@ -8,7 +8,7 @@ namespace BeatGrid.ConsoleApp.Services
 {
     public interface ITestUtil
     {
-        public void Test();
+        void Test();
     }
 
     public class TestUtil : ITestUtil

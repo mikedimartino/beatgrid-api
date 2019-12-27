@@ -7,7 +7,7 @@
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "LambdaBeatGridApi::LambdaBeatGridApi.LambdaEntryPoint::FunctionHandlerAsync",
+        "Handler": "BeatGrid.Rest::BeatGrid.Rest.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,

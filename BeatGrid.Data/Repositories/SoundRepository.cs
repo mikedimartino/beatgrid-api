@@ -7,7 +7,7 @@ namespace BeatGrid.Data.Repositories
 {
     public interface ISoundRepository
     {
-        public Task<List<SoundEntity>> GetSounds(IEnumerable<string> ids);
+        Task<List<SoundEntity>> GetSounds(IEnumerable<string> ids);
     }
 
     public class SoundRepository : ISoundRepository

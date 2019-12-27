@@ -23,11 +23,11 @@ namespace BeatGrid.ConsoleApp
                 .AddSingleton<IDynamoDBContext>(x =>
                 {
                     var ddb = x.GetRequiredService<IAmazonDynamoDB>();
-                    var config = new DynamoDBContextConfig
+                    var ddbConfig = new DynamoDBContextConfig
                     {
                         TableNamePrefix = "dev_"
                     };
-                    return new DynamoDBContext(ddb, config);
+                    return new DynamoDBContext(ddb, ddbConfig);
                 })
                 .AddSingleton<ITestUtil, TestUtil>()
                 .AddSingleton<IBeatRepository, BeatRepository>()
