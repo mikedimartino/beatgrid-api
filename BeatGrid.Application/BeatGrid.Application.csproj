@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.3" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.107.13" />
   </ItemGroup>
 
   <ItemGroup>

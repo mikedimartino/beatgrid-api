@@ -1,6 +1,8 @@
+using Amazon.CognitoIdentityProvider;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using AutoMapper;
+using BeatGrid.Application.Cognito;
 using BeatGrid.Application.Map;
 using BeatGrid.Application.Services;
 using BeatGrid.Data.Repositories;
@@ -13,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Text;
 
 namespace BeatGrid.Rest
@@ -29,7 +33,11 @@ namespace BeatGrid.Rest
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(options => {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                }); ;
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -51,14 +59,15 @@ namespace BeatGrid.Rest
                 };
                 return new DynamoDBContext(ddb, config);
             });
+            services.AddAWSService<IAmazonCognitoIdentityProvider>();
 
             // Configure JWT Authentication
             // http://snevsky.com/blog/dotnet-core-authentication-aws-cognito
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Audience = "38qdjeagcn93uqgbnh18qoj4dg"; // Cognito user pool app client id
-                    options.Authority = "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_CPEOlgCr7";
+                    options.Audience = CognitoHelper.ClientId;
+                    options.Authority = $"https://cognito-idp.{CognitoHelper.Region}.amazonaws.com/{CognitoHelper.PoolId}";
                 });
 
 
@@ -67,6 +76,8 @@ namespace BeatGrid.Rest
             services.AddSingleton<IBeatRepository, BeatRepository>();
             services.AddSingleton<ISoundService, SoundService>();
             services.AddSingleton<ISoundRepository, SoundRepository>();
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<ICognitoHelper, CognitoHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
