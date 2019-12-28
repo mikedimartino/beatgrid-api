@@ -3,11 +3,13 @@ using BeatGrid.Application.Services;
 using System.Threading.Tasks;
 using System.Linq;
 using BeatGrid.Contracts.Response;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeatGrid.Rest
 {
     [Route("v1/beat")]
     [ApiController]
+    [Authorize]
     public class BeatController : ControllerBase
     {
         private readonly IBeatService _beatService;
@@ -20,6 +22,7 @@ namespace BeatGrid.Rest
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<GetBeatsResponse>> GetBeats()
         {
             var beats = await _beatService.GetBeats();
@@ -33,6 +36,7 @@ namespace BeatGrid.Rest
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<GetBeatResponse>> GetBeat(string id)
         {
             var beat = await _beatService.GetBeat(id);
@@ -51,9 +55,11 @@ namespace BeatGrid.Rest
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBeat(object beat)
+        public async Task<ActionResult<int>> CreateBeat(object beat)
         {
             // TODO: Perform validation
+            // NOTE: Can get creator id by looking at 
+                // HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value
             var id = await _beatService.CreateBeat(beat);
             return Created($"/beat/{id}", id);
         }

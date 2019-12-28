@@ -38,12 +38,12 @@ namespace BeatGrid.Data.Repositories
 
         public async Task SaveBeat(BeatEntity beat)
         {
-            //await _context.SaveAsync(beat);
+            await _context.SaveAsync(beat);
         }
 
         public async Task DeleteBeat(string id)
         {
-            //await _context.DeleteAsync(new BeatEntity { Id = id });
+            await _context.DeleteAsync(new BeatEntity { Id = id });
         }
     }
 }

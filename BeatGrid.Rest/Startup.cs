@@ -4,13 +4,16 @@ using AutoMapper;
 using BeatGrid.Application.Map;
 using BeatGrid.Application.Services;
 using BeatGrid.Data.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace BeatGrid.Rest
 {
@@ -49,6 +52,16 @@ namespace BeatGrid.Rest
                 return new DynamoDBContext(ddb, config);
             });
 
+            // Configure JWT Authentication
+            // http://snevsky.com/blog/dotnet-core-authentication-aws-cognito
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "38qdjeagcn93uqgbnh18qoj4dg"; // Cognito user pool app client id
+                    options.Authority = "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_CPEOlgCr7";
+                });
+
+
             // Custom
             services.AddSingleton<IBeatService, BeatService>();
             services.AddSingleton<IBeatRepository, BeatRepository>();
@@ -75,13 +88,7 @@ namespace BeatGrid.Rest
             }
 
             app.UseHttpsRedirection();
-            //app.UseRouting();
-            //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
-
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
