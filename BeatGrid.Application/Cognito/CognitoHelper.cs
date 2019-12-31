@@ -1,12 +1,13 @@
 ﻿using Amazon.CognitoIdentityProvider;
 using Amazon.Extensions.CognitoAuthentication;
+using BeatGrid.Contracts.Common;
 using System.Threading.Tasks;
 
 namespace BeatGrid.Application.Cognito
 {
     public interface ICognitoHelper
     {
-        Task<string> GetToken(string username, string password);
+        Task<TokenData> GetToken(string username, string password);
     }
 
     public class CognitoHelper : ICognitoHelper
@@ -28,7 +29,7 @@ namespace BeatGrid.Application.Cognito
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public async Task<string> GetToken(string username, string password)
+        public async Task<TokenData> GetToken(string username, string password)
         {
             var userPool = new CognitoUserPool(PoolId, ClientId, _cognitoIdentityProvider);
             var user = new CognitoUser(username, ClientId, userPool, _cognitoIdentityProvider);
@@ -36,7 +37,11 @@ namespace BeatGrid.Application.Cognito
 
             var authResponse = await user.StartWithSrpAuthAsync(authRequest).ConfigureAwait(false);
 
-            return authResponse.AuthenticationResult.IdToken;
+            return new TokenData
+            {
+                Value = authResponse.AuthenticationResult.IdToken,
+                ExpiresIn = authResponse.AuthenticationResult.ExpiresIn
+            };
         }
     }
 }

@@ -11,9 +11,8 @@ namespace BeatGrid.Application.Services
     public interface IBeatService
     {
         Task<IEnumerable<Beat>> GetBeats();
-        Task<Beat> GetBeat(string id);
-        Task<string> CreateBeat(object beat);
-        Task UpdateBeat(object beat);
+        Task<string> CreateBeat(Beat beat);
+        Task UpdateBeat(Beat beat);
         Task DeleteBeat(string id);
     }
 
@@ -34,16 +33,10 @@ namespace BeatGrid.Application.Services
             return _mapper.Map<IEnumerable<Beat>>(beatEntities);
         }
 
-        public async Task<Beat> GetBeat(string id)
-        {
-            var beatEntity = await _repository.GetBeat(id);
-            return _mapper.Map<Beat>(beatEntity);
-        }
-
-        public async Task<string> CreateBeat(object beat)
+        public async Task<string> CreateBeat(Beat beat)
         {
             var id = Guid.NewGuid().ToString();
-            var entity = (BeatEntity)beat;
+            var entity = _mapper.Map<BeatEntity>(beat);
             entity.Id = id;
 
             await _repository.SaveBeat(entity);
@@ -51,9 +44,9 @@ namespace BeatGrid.Application.Services
             return id;
         }
 
-        public async Task UpdateBeat(object beat)
+        public async Task UpdateBeat(Beat beat)
         {
-            var entity = (BeatEntity)beat;
+            var entity = _mapper.Map<BeatEntity>(beat);
             await _repository.SaveBeat(entity);
         }
 

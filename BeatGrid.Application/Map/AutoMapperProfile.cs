@@ -10,6 +10,7 @@ namespace BeatGrid.Application.Map
         {
             CreateMap<BeatEntity, Beat>();
             CreateMap<SoundEntity, Sound>();
+            CreateMap<Beat, BeatEntity>();
         }
     }
 }

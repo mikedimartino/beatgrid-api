@@ -24,7 +24,7 @@ namespace BeatGrid.Rest.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
             var result = await _authService.Login(request.Username, request.Password);

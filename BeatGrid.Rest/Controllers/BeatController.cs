@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using BeatGrid.Contracts.Response;
 using Microsoft.AspNetCore.Authorization;
+using BeatGrid.Contracts.Common;
 
 namespace BeatGrid.Rest
 {
@@ -35,27 +36,8 @@ namespace BeatGrid.Rest
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<GetBeatResponse>> GetBeat(string id)
-        {
-            var beat = await _beatService.GetBeat(id);
-
-            if (beat == null)
-            {
-                return NotFound();
-            }
-
-            var distinctSoundIds = beat.GetSoundIds().Distinct();
-            var sounds = await _soundService.GetSounds(distinctSoundIds);
-
-            var response = new GetBeatResponse { Beat = beat, Sounds = sounds };
-
-            return Ok(response);
-        }
-
         [HttpPost]
-        public async Task<ActionResult<int>> CreateBeat(object beat)
+        public async Task<ActionResult<int>> CreateBeat(Beat beat)
         {
             // TODO: Perform validation
             // NOTE: Can get creator id by looking at 
@@ -65,7 +47,7 @@ namespace BeatGrid.Rest
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateBeat(object beat)
+        public async Task<IActionResult> UpdateBeat(Beat beat)
         {
             await _beatService.UpdateBeat(beat);
             // Return 201 if didn't exist already?

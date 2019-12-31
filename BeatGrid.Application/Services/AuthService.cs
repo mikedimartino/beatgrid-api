@@ -25,7 +25,10 @@ namespace BeatGrid.Application.Services
 
             try
             {
-                result.Token = await _cognito.GetToken(username, password);
+                var tokenData = await _cognito.GetToken(username, password);
+                result.Token = tokenData.Value;
+                result.ExpiresIn = tokenData.ExpiresIn;
+                result.Username = username;
                 result.IsSuccess = true;
             }
             catch (Exception ex)
