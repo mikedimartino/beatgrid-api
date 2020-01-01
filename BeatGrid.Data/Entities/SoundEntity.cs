@@ -2,7 +2,7 @@
 
 namespace BeatGrid.Data.Entities
 {
-    [DynamoDBTable("Sound")]
+    [DynamoDBTable("BeatGrid.Sound")]
     public class SoundEntity
     {
         [DynamoDBHashKey]

@@ -5,7 +5,10 @@ using AutoMapper;
 using BeatGrid.Application.Cognito;
 using BeatGrid.Application.Map;
 using BeatGrid.Application.Services;
+using BeatGrid.Application.Validators;
+using BeatGrid.Contracts.Common;
 using BeatGrid.Data.Repositories;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,14 +21,18 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BeatGrid.Rest
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
         }
 
         public static IConfiguration Configuration { get; private set; }
@@ -57,7 +64,7 @@ namespace BeatGrid.Rest
                 var ddb = x.GetRequiredService<IAmazonDynamoDB>();
                 var config = new DynamoDBContextConfig
                 {
-                    TableNamePrefix = "dev_"
+                    TableNamePrefix = _environment.IsDevelopment() ? "dev_" : ""
                 };
                 return new DynamoDBContext(ddb, config);
             });
@@ -80,10 +87,11 @@ namespace BeatGrid.Rest
             services.AddSingleton<ISoundRepository, SoundRepository>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ICognitoHelper, CognitoHelper>();
+            services.AddSingleton<IValidator<Beat>, BeatValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

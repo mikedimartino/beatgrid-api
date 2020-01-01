@@ -1,6 +1,7 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using BeatGrid.Data.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BeatGrid.Data.Repositories
@@ -32,7 +33,9 @@ namespace BeatGrid.Data.Repositories
 
         public async Task<BeatEntity> GetBeat(string id)
         {
-            var beat = await _context.LoadAsync<BeatEntity>(id);
+            //var beat = await _context.LoadAsync<BeatEntity>(id);
+            var beat = (await _context.QueryAsync<BeatEntity>(id).GetRemainingAsync())?.FirstOrDefault();
+
             return beat;
         }
 

@@ -5,6 +5,8 @@ using System.Linq;
 using BeatGrid.Contracts.Response;
 using Microsoft.AspNetCore.Authorization;
 using BeatGrid.Contracts.Common;
+using FluentValidation;
+using System.Collections.Generic;
 
 namespace BeatGrid.Rest
 {
@@ -37,21 +39,41 @@ namespace BeatGrid.Rest
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateBeat(Beat beat)
+        public async Task<ActionResult<Beat>> CreateBeat(Beat beat)
         {
-            // TODO: Perform validation
-            // NOTE: Can get creator id by looking at 
-                // HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value
-            var id = await _beatService.CreateBeat(beat);
-            return Created($"/beat/{id}", id);
+            try
+            {
+                var id = await _beatService.CreateBeat(beat, GetUserId());
+                return Created($"/beat/{id}", beat);
+            }
+            catch(ValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
+
+        // TODO: Endpoint for getting single beat
 
         [HttpPut]
         public async Task<IActionResult> UpdateBeat(Beat beat)
         {
-            await _beatService.UpdateBeat(beat);
-            // Return 201 if didn't exist already?
-            return NoContent();
+            try
+            {
+                await _beatService.UpdateBeat(beat, GetUserId());
+                return NoContent();
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(beat);
+            }
+            catch (System.Exception e)
+            {
+                throw;
+            }
         }
 
         [HttpDelete("{id}")]
@@ -59,6 +81,11 @@ namespace BeatGrid.Rest
         {
             await _beatService.DeleteBeat(id);
             return Ok();
+        }
+
+        private string GetUserId()
+        {
+            return HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? null;
         }
     }
 }
