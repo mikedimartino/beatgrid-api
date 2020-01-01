@@ -70,17 +70,20 @@ namespace BeatGrid.Rest
             {
                 return NotFound(beat);
             }
-            catch (System.Exception e)
-            {
-                throw;
-            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBeat(string id)
         {
-            await _beatService.DeleteBeat(id);
-            return Ok();
+            try
+            {
+                await _beatService.DeleteBeat(id);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(id);
+            }
         }
 
         private string GetUserId()

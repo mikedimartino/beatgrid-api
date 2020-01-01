@@ -18,35 +18,27 @@ namespace BeatGrid.Data.Repositories
     {
         private readonly IDynamoDBContext _context;
 
-        public BeatRepository(IDynamoDBContext context)
-        {
-            _context = context;
-        }
+        public BeatRepository(IDynamoDBContext context) => _context = context;
 
         public async Task<IEnumerable<BeatEntity>> GetBeats()
         {
             var conditions = new List<ScanCondition>();
-            var beats = await _context.ScanAsync<BeatEntity>(conditions).GetRemainingAsync();
-
-            return beats;
+            return await _context.ScanAsync<BeatEntity>(conditions).GetRemainingAsync();
         }
 
-        public async Task<BeatEntity> GetBeat(string id)
-        {
-            //var beat = await _context.LoadAsync<BeatEntity>(id);
-            var beat = (await _context.QueryAsync<BeatEntity>(id).GetRemainingAsync())?.FirstOrDefault();
+        public async Task<BeatEntity> GetBeat(string id) =>
+            (await _context.QueryAsync<BeatEntity>(id).GetRemainingAsync())?.FirstOrDefault();
 
-            return beat;
-        }
-
-        public async Task SaveBeat(BeatEntity beat)
-        {
-            await _context.SaveAsync(beat);
-        }
+        public async Task SaveBeat(BeatEntity beat) => await _context.SaveAsync(beat);
 
         public async Task DeleteBeat(string id)
         {
-            await _context.DeleteAsync(new BeatEntity { Id = id });
+            var beat = await GetBeat(id); // Need to get range key first
+            if (beat == null)
+            {
+                throw new KeyNotFoundException();
+            }
+            await _context.DeleteAsync(beat);
         }
     }
 }
