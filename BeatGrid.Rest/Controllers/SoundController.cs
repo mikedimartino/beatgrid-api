@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BeatGrid.Application.Extensions;
 using BeatGrid.Application.Services;
 using BeatGrid.Contracts.Common;
 using BeatGrid.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +13,7 @@ namespace BeatGrid.Rest.Controllers
 {
     [Route("v1/sound")]
     [ApiController]
+    [Authorize]
     public class SoundController : ControllerBase
     {
         private readonly ISoundService _soundService;
@@ -20,6 +21,7 @@ namespace BeatGrid.Rest.Controllers
         public SoundController(ISoundService soundService) => _soundService = soundService;
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<SoundEntity>>> GetSounds()
         {
             var sounds = await _soundService.GetSounds();
