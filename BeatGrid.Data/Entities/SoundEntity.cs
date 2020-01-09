@@ -7,7 +7,12 @@ namespace BeatGrid.Data.Entities
     {
         [DynamoDBHashKey]
         public string Id { get; set; }
+        
         public string Name { get; set; }
-        public string FilePath { get; set; }
+        
+        [DynamoDBGlobalSecondaryIndexHashKey]
+        public string Category { get; set; }
+
+        public string Url { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using BeatGrid.Contracts.Common;
 using BeatGrid.Data.Entities;
 using BeatGrid.Data.Repositories;
+using AutoMapper;
 using FluentValidation;
 
 namespace BeatGrid.Application.Services
@@ -81,9 +81,6 @@ namespace BeatGrid.Application.Services
             await _repository.SaveBeat(entity);
         }
 
-        public async Task DeleteBeat(string id)
-        {
-            await _repository.DeleteBeat(id);
-        }
+        public async Task DeleteBeat(string id) => await _repository.DeleteBeat(id);
     }
 }

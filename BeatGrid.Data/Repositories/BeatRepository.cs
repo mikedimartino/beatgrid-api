@@ -1,8 +1,8 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using BeatGrid.Data.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BeatGrid.Data.Entities;
+using Amazon.DynamoDBv2.DataModel;
 
 namespace BeatGrid.Data.Repositories
 {
@@ -31,14 +31,6 @@ namespace BeatGrid.Data.Repositories
 
         public async Task SaveBeat(BeatEntity beat) => await _context.SaveAsync(beat);
 
-        public async Task DeleteBeat(string id)
-        {
-            var beat = await GetBeat(id); // Need to get range key first
-            if (beat == null)
-            {
-                throw new KeyNotFoundException();
-            }
-            await _context.DeleteAsync(beat);
-        }
+        public async Task DeleteBeat(string id) => await _context.DeleteAsync<BeatEntity>(id);
     }
 }

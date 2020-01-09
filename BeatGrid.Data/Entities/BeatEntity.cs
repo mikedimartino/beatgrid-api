@@ -11,7 +11,6 @@ namespace BeatGrid.Data.Entities
     {
         [DynamoDBHashKey]
         public string Id { get; set; }
-        [DynamoDBRangeKey]
         public string CreatedBy { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifyDate { get; set; }

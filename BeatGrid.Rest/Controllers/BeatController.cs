@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BeatGrid.Application.Services;
-using System.Threading.Tasks;
-using System.Linq;
-using BeatGrid.Contracts.Response;
-using Microsoft.AspNetCore.Authorization;
-using BeatGrid.Contracts.Common;
-using FluentValidation;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BeatGrid.Application.Services;
+using BeatGrid.Contracts.Common;
+using BeatGrid.Contracts.Response;
+using FluentValidation;
 
 namespace BeatGrid.Rest
 {
@@ -26,16 +27,17 @@ namespace BeatGrid.Rest
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<GetBeatsResponse>> GetBeats()
+        public async Task<ActionResult<IEnumerable<Beat>>> GetBeats()
         {
-            var beats = await _beatService.GetBeats();
-
-            var distinctSoundIds = beats.SelectMany(b => b.GetSoundIds()).Distinct();
-            var sounds = await _soundService.GetSounds(distinctSoundIds);
-
-            var response = new GetBeatsResponse { Beats = beats, Sounds = sounds };
-
-            return Ok(response);
+            try
+            {
+                var beats = await _beatService.GetBeats();
+                return Ok(beats);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpPost]
@@ -51,8 +53,6 @@ namespace BeatGrid.Rest
                 return BadRequest(e.Message);
             }
         }
-
-        // TODO: Endpoint for getting single beat
 
         [HttpPut]
         public async Task<IActionResult> UpdateBeat(Beat beat)
@@ -86,9 +86,6 @@ namespace BeatGrid.Rest
             }
         }
 
-        private string GetUserId()
-        {
-            return HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? null;
-        }
+        private string GetUserId() => HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? null;
     }
 }

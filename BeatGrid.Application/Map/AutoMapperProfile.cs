@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using BeatGrid.Contracts.Common;
+﻿using BeatGrid.Contracts.Common;
 using BeatGrid.Data.Entities;
+using AutoMapper;
 
 namespace BeatGrid.Application.Map
 {
@@ -9,7 +9,6 @@ namespace BeatGrid.Application.Map
         public AutoMapperProfile()
         {
             CreateMap<BeatEntity, Beat>();
-            CreateMap<SoundEntity, Sound>();
             CreateMap<Beat, BeatEntity>();
         }
     }
