@@ -8,8 +8,8 @@ namespace BeatGrid.Data.Repositories
 {
     public interface IBeatRepository
     {
-        Task<IEnumerable<BeatEntity>> GetBeats();
         Task<BeatEntity> GetBeat(string id);
+        Task<IEnumerable<BeatEntity>> GetBeats();
         Task SaveBeat(BeatEntity beat);
         Task DeleteBeat(string id);
     }
@@ -20,14 +20,14 @@ namespace BeatGrid.Data.Repositories
 
         public BeatRepository(IDynamoDBContext context) => _context = context;
 
+        public async Task<BeatEntity> GetBeat(string id) =>
+            (await _context.QueryAsync<BeatEntity>(id).GetRemainingAsync())?.FirstOrDefault();
+
         public async Task<IEnumerable<BeatEntity>> GetBeats()
         {
             var conditions = new List<ScanCondition>();
             return await _context.ScanAsync<BeatEntity>(conditions).GetRemainingAsync();
         }
-
-        public async Task<BeatEntity> GetBeat(string id) =>
-            (await _context.QueryAsync<BeatEntity>(id).GetRemainingAsync())?.FirstOrDefault();
 
         public async Task SaveBeat(BeatEntity beat) => await _context.SaveAsync(beat);
 

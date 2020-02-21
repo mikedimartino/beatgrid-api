@@ -21,7 +21,7 @@ namespace BeatGrid.Rest.Controllers
         public SoundController(ISoundService soundService) => _soundService = soundService;
 
         [HttpGet]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<SoundEntity>>> GetSounds()
         {
             var sounds = await _soundService.GetSounds();

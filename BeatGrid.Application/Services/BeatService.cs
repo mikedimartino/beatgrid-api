@@ -11,31 +11,35 @@ namespace BeatGrid.Application.Services
 {
     public interface IBeatService
     {
-        Task<IEnumerable<Beat>> GetBeats();
+        Task<IEnumerable<Beat>> GetBeats(bool isAuthenticated);
         Task<string> CreateBeat(Beat beat, string userId);
         Task UpdateBeat(Beat beat, string userId);
         Task DeleteBeat(string id);
+        Task Sync();
     }
 
     public class BeatService : IBeatService
     {
         private readonly IBeatRepository _repository;
+        private readonly IPublicBeatRepository _publicRepository;
         private readonly IMapper _mapper;
         private readonly IValidator<Beat> _validator;
 
         public BeatService(
             IBeatRepository repository,
+            IPublicBeatRepository publicRepository,
             IMapper mapper,
             IValidator<Beat> validator)
         {
             _repository = repository;
+            _publicRepository = publicRepository;
             _mapper = mapper;
             _validator = validator;
         }
 
-        public async Task<IEnumerable<Beat>> GetBeats()
+        public async Task<IEnumerable<Beat>> GetBeats(bool isAuthenticated)
         {
-            var beatEntities = await _repository.GetBeats();
+            var beatEntities = await (isAuthenticated ? _repository.GetBeats() : _publicRepository.GetBeats());
             return _mapper.Map<IEnumerable<Beat>>(beatEntities);
         }
 
@@ -82,5 +86,15 @@ namespace BeatGrid.Application.Services
         }
 
         public async Task DeleteBeat(string id) => await _repository.DeleteBeat(id);
+
+        /// <summary>
+        /// Sync public beats (static JSON on S3) with live beats (DynamoDB)
+        /// </summary>
+        /// <returns></returns>
+        public async Task Sync()
+        {
+            var liveBeats = await _repository.GetBeats();
+            _publicRepository.SaveBeatsAsync(liveBeats);
+        }
     }
 }

@@ -1,6 +1,7 @@
 using Amazon.CognitoIdentityProvider;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.S3;
 using AutoMapper;
 using BeatGrid.Application.Cognito;
 using BeatGrid.Application.Map;
@@ -69,6 +70,7 @@ namespace BeatGrid.Rest
                 return new DynamoDBContext(ddb, config);
             });
             services.AddAWSService<IAmazonCognitoIdentityProvider>();
+            services.AddAWSService<IAmazonS3>();
 
             // Configure JWT Authentication
             // http://snevsky.com/blog/dotnet-core-authentication-aws-cognito
@@ -83,6 +85,7 @@ namespace BeatGrid.Rest
             // Custom
             services.AddSingleton<IBeatService, BeatService>();
             services.AddSingleton<IBeatRepository, BeatRepository>();
+            services.AddSingleton<IPublicBeatRepository, PublicBeatRepository>();
             services.AddSingleton<ISoundService, SoundService>();
             services.AddSingleton<ISoundRepository, SoundRepository>();
             services.AddSingleton<IAuthService, AuthService>();

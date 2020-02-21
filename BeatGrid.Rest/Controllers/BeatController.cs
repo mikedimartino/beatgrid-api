@@ -29,15 +29,9 @@ namespace BeatGrid.Rest
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Beat>>> GetBeats()
         {
-            try
-            {
-                var beats = await _beatService.GetBeats();
-                return Ok(beats);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            bool isAuthenticated = HttpContext.User.Identity.IsAuthenticated;
+            var beats = await _beatService.GetBeats(isAuthenticated);
+            return Ok(beats);
         }
 
         [HttpPost]
@@ -84,6 +78,13 @@ namespace BeatGrid.Rest
             {
                 return NotFound(id);
             }
+        }
+
+        [HttpPost("sync")]
+        public async Task<IActionResult> Sync()
+        {
+            await _beatService.Sync();
+            return Ok();
         }
 
         private string GetUserId() => HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? null;
