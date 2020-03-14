@@ -39,7 +39,7 @@ namespace BeatGrid.Rest
         {
             try
             {
-                var id = await _beatService.CreateBeat(beat, GetUserId());
+                var id = await _beatService.CreateBeat(beat, GetUserId(), true);
                 return Created($"/beat/{id}", beat);
             }
             catch(ValidationException e)
@@ -53,7 +53,7 @@ namespace BeatGrid.Rest
         {
             try
             {
-                await _beatService.UpdateBeat(beat, GetUserId());
+                await _beatService.UpdateBeat(beat, GetUserId(), true);
                 return NoContent();
             }
             catch (ValidationException e)
@@ -71,7 +71,7 @@ namespace BeatGrid.Rest
         {
             try
             {
-                await _beatService.DeleteBeat(id);
+                await _beatService.DeleteBeat(id, true);
                 return Ok();
             }
             catch (KeyNotFoundException e)

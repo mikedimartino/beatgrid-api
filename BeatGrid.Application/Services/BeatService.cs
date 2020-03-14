@@ -12,9 +12,9 @@ namespace BeatGrid.Application.Services
     public interface IBeatService
     {
         Task<IEnumerable<Beat>> GetBeats(bool isAuthenticated);
-        Task<string> CreateBeat(Beat beat, string userId);
-        Task UpdateBeat(Beat beat, string userId);
-        Task DeleteBeat(string id);
+        Task<string> CreateBeat(Beat beat, string userId, bool shouldSync = false);
+        Task UpdateBeat(Beat beat, string userId, bool shouldSync = false);
+        Task DeleteBeat(string id, bool shouldSync = false);
         Task Sync();
     }
 
@@ -43,7 +43,7 @@ namespace BeatGrid.Application.Services
             return _mapper.Map<IEnumerable<Beat>>(beatEntities);
         }
 
-        public async Task<string> CreateBeat(Beat beat, string userId)
+        public async Task<string> CreateBeat(Beat beat, string userId, bool shouldSync = false)
         {
             beat.Id = Guid.NewGuid().ToString();
 
@@ -59,11 +59,12 @@ namespace BeatGrid.Application.Services
             entity.ModifyDate = DateTime.UtcNow;
 
             await _repository.SaveBeat(entity);
+            if (shouldSync) await Sync();
 
             return beat.Id;
         }
 
-        public async Task UpdateBeat(Beat beat, string userId)
+        public async Task UpdateBeat(Beat beat, string userId, bool shouldSync = false)
         {
             var validationResult = _validator.Validate(beat);
             if (!validationResult.IsValid)
@@ -83,9 +84,14 @@ namespace BeatGrid.Application.Services
             entity.CreateDate = savedBeat.CreateDate;
 
             await _repository.SaveBeat(entity);
+            if (shouldSync) await Sync();
         }
 
-        public async Task DeleteBeat(string id) => await _repository.DeleteBeat(id);
+        public async Task DeleteBeat(string id, bool shouldSync = false)
+        {
+            await _repository.DeleteBeat(id);
+            if (shouldSync) await Sync();
+        }
 
         /// <summary>
         /// Sync public beats (static JSON on S3) with live beats (DynamoDB)
