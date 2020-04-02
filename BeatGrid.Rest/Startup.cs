@@ -22,15 +22,14 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BeatGrid.Rest
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             _environment = environment;
@@ -45,9 +44,15 @@ namespace BeatGrid.Rest
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(options => {
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                }); ;
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                })
+                .AddMvcOptions(options =>
+                {
+                    options.EnableEndpointRouting = false;
+                });
+
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -94,7 +99,7 @@ namespace BeatGrid.Rest
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
